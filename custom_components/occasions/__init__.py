@@ -31,7 +31,7 @@ def ensure_frontend_files(hass):
 
     if not os.path.exists(dst_file):
         shutil.copyfile(src, dst_file)
-        hass.components.logger.info("Occasions frontend files copied to: %s", dst_dir)
+        hass.logger.info("Occasions frontend files copied to: %s", dst_dir)
 
 
 
@@ -52,4 +52,4 @@ async def register_lovelace_module(hass):
                 "res_type": "module"
             }
         )
-        hass.components.logger.info(f"Added {resource_url} to Lovelace resources.")
+        hass.logger.info(f"Added {resource_url} to Lovelace resources.")
