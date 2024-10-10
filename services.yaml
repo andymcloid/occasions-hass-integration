@@ -1,0 +1,24 @@
+add_occasion:
+  name: "Add Occasion"
+  description: "Create a new occasion to track."
+  fields:
+    name:
+      description: "Name of the occasion."
+      example: "My Birthday"
+    date:
+      description: "Date of the occasion in YYYY-MM-DD format."
+      example: "2024-10-10"
+    icon:
+      description: "Icon to use for the occasion (optional)."
+      example: "mdi:calendar"
+    person:
+      description: "Person entity linked to this occasion (optional)."
+      example: "person.john_doe"
+
+remove_occasion:
+  name: "Remove Occasion"
+  description: "Delete an existing occasion."
+  fields:
+    name:
+      description: "Name of the occasion to remove."
+      example: "My Birthday"
