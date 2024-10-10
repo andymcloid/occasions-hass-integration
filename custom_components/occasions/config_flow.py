@@ -21,7 +21,7 @@ class OccasionsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         # Define the schema for the form
         schema = vol.Schema({
             vol.Required("name", default="My Occasion"): str,   # Name input
-            vol.Required("date", default="2024-01-01"): vol.Match(r"^\d{4}-\d{2}-\d{2}$")
+            vol.Required("date", default="2024-01-01"): vol.Match(r"^\d{4}-\d{2}-\d{2}$"),
             vol.Optional("person", default=None): vol.In(person_entities),  # Entity picker for person entities
             vol.Optional("icon", default="mdi:calendar"): vol.All(str, vol.Match(r'^mdi:.+')),  # Icon input with validation
         })
