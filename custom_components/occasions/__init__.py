@@ -24,7 +24,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
 def ensure_frontend_files(hass):
     src = os.path.join(os.path.dirname(__file__), "occasions-card.js")
-    dst_dir = os.path.join(hass.config.path("www/community/occasions/"))
+    dst_dir = os.path.join(hass.config.path("www/community/occasions-card/"))
     
     if not os.path.exists(dst_dir):
         os.makedirs(dst_dir)
@@ -37,16 +37,12 @@ def ensure_frontend_files(hass):
 
 
 async def register_lovelace_module(hass):
-    # Check if the resource is already added to Lovelace
-    resources = await hass.helpers.storage.async_migrate(
-        "lovelace_resources",
-        1,
-        lambda _: {"resources": []}
-    )
-    resource_url = "/hacsfiles/occasions/occasions-card.js"
+    # Use the 'lovelace' component to access resources
+    resources = await hass.helpers.entity_component.async_get_entity_ids("lovelace.resources")
+    resource_url = "/hacsfiles/occasions-card/occasions-card.js"
     
-    # If the resource is not already added, add it
-    if not any(resource["url"] == resource_url for resource in resources["resources"]):
+    # Check if the resource is already added
+    if not any(resource["url"] == resource_url for resource in resources):
         await hass.services.async_call(
             "lovelace", "resources/add", {
                 "url": resource_url,
