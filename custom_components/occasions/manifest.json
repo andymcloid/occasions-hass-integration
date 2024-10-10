@@ -1,10 +1,10 @@
 {
   "domain": "occasions",
   "name": "Occasions",
-  "version": "0.1.1",
-  "documentation": "http://andreaspc:5500/README.md",
+  "version": "1.0.0",
+  "documentation": "https://github.com/andymcloid/occasions-hass-integration",
   "requirements": [],
-  "codeowners": ["@your-github-handle"],
+  "codeowners": ["@andymcloid"],
   "config_flow": true,
   "iot_class": "local_polling",
   "icon": "https://cdn2.iconfinder.com/data/icons/covid-19-2/64/28-Calendar-256.png",
