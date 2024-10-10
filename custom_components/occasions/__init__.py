@@ -37,8 +37,16 @@ def ensure_frontend_files(hass):
 
 
 async def register_lovelace_module(hass):
-    # Use the 'lovelace' component to access resources
-    resources = await hass.helpers.entity_component.async_get_entity_ids("lovelace.resources")
+    # Get the lovelace resources
+    lovelace = hass.data.get("lovelace", None)
+    
+    # Fetch resources if not already fetched
+    if lovelace and "resources" in lovelace:
+        resources = lovelace["resources"].async_items()
+    else:
+        _LOGGER.error("Could not fetch Lovelace resources")
+        return
+
     resource_url = "/hacsfiles/occasions-card/occasions-card.js"
     
     # Check if the resource is already added
@@ -50,3 +58,5 @@ async def register_lovelace_module(hass):
             }
         )
         _LOGGER.info(f"Added {resource_url} to Lovelace resources.")
+    else:
+        _LOGGER.info(f"Lovelace resource {resource_url} already exists.")

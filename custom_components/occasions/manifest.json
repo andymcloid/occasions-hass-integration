@@ -1,7 +1,7 @@
 {
   "domain": "occasions",
   "name": "Occasions",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "documentation": "https://github.com/andymcloid/occasions-hass-integration",
   "requirements": [],
   "codeowners": ["@andymcloid"],
@@ -9,6 +9,6 @@
   "iot_class": "local_polling",
   "icon": "https://cdn2.iconfinder.com/data/icons/covid-19-2/64/28-Calendar-256.png",
   "frontend": {
-    "extra_module_url": "/hacsfiles/occasions/occasions-card.js"
+    "extra_module_url": "/hacsfiles/occasions-card/occasions-card.js"
   }
 }
