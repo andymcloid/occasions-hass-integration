@@ -1,7 +1,7 @@
 {
   "domain": "occasions",
   "name": "Occasions",
-  "version": "1.1.9",
+  "version": "1.1.91",
   "documentation": "https://github.com/andymcloid/occasions-hass-integration",
   "requirements": [],
   "codeowners": ["@andymcloid"],
