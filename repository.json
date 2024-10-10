@@ -1,0 +1,7 @@
+{
+  "name": "Occasions",
+  "domain": "occasions",
+  "country": "global",
+  "homeassistant_min_version": "2021.12.0",
+  "version": "0.1.0"
+}
