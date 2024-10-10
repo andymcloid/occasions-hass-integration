@@ -7,6 +7,9 @@ from homeassistant.core import HomeAssistant
 from .const import DOMAIN
 import os
 import shutil
+import logging
+
+_LOGGER = logging.getLogger(__name__)  # Set up logging
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     """Set up Occasions from a config entry."""
@@ -17,7 +20,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         hass.config_entries.async_forward_entry_setup(entry, "sensor")
     )
     return True
-
 
 
 def ensure_frontend_files(hass):
@@ -31,8 +33,7 @@ def ensure_frontend_files(hass):
 
     if not os.path.exists(dst_file):
         shutil.copyfile(src, dst_file)
-        hass.logger.info("Occasions frontend files copied to: %s", dst_dir)
-
+        _LOGGER.info("Occasions frontend files copied to: %s", dst_dir)
 
 
 async def register_lovelace_module(hass):
@@ -52,4 +53,4 @@ async def register_lovelace_module(hass):
                 "res_type": "module"
             }
         )
-        hass.logger.info(f"Added {resource_url} to Lovelace resources.")
+        _LOGGER.info(f"Added {resource_url} to Lovelace resources.")
