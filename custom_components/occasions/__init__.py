@@ -37,26 +37,28 @@ def ensure_frontend_files(hass):
 
 
 async def register_lovelace_module(hass):
-    # Get the lovelace resources
-    lovelace = hass.data.get("lovelace", None)
-    
-    # Fetch resources if not already fetched
-    if lovelace and "resources" in lovelace:
-        resources = lovelace["resources"].async_items()
-    else:
-        _LOGGER.error("Could not fetch Lovelace resources")
+    """Register the Lovelace resource."""
+    # Make sure the Lovelace integration is loaded
+    if "lovelace" not in hass.data:
+        _LOGGER.error("Lovelace component not found. Ensure you're in Storage Mode.")
         return
 
+    # Fetch the current resources if available
+    resources = hass.data["lovelace"]["resources"].async_items() if "resources" in hass.data["lovelace"] else []
+    
     resource_url = "/hacsfiles/occasions-card/occasions-card.js"
     
     # Check if the resource is already added
     if not any(resource["url"] == resource_url for resource in resources):
-        await hass.services.async_call(
-            "lovelace", "resources/add", {
-                "url": resource_url,
-                "res_type": "module"
-            }
-        )
-        _LOGGER.info(f"Added {resource_url} to Lovelace resources.")
+        try:
+            await hass.services.async_call(
+                "lovelace", "resources/add", {
+                    "url": resource_url,
+                    "res_type": "module"
+                }
+            )
+            _LOGGER.info(f"Added {resource_url} to Lovelace resources.")
+        except Exception as e:
+            _LOGGER.error(f"Failed to add Lovelace resource: {str(e)}")
     else:
         _LOGGER.info(f"Lovelace resource {resource_url} already exists.")
