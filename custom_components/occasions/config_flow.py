@@ -23,7 +23,7 @@ class OccasionsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             vol.Required("name", default="My Occasion"): str,   # Name input
             vol.Required("date", default="2024-01-01"): str,
             vol.Optional("person", default=None): vol.In(person_entities),  # Entity picker for person entities
-            vol.Optional("icon", default="mdi:calendar"): vol.All(str, vol.Match(r'^mdi:.+')),  # Icon input with validation
+            vol.Optional("icon", default="mdi:calendar"): str,  # Icon input with validation
         })
 
         return self.async_show_form(
