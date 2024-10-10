@@ -2,7 +2,7 @@
   "domain": "occasions",
   "name": "Occasions",
   "version": "0.1.1",
-  "documentation": "https://github.com/your-repo/occasions",
+  "documentation": "http://andreaspc:5500/README.md",
   "requirements": [],
   "codeowners": ["@your-github-handle"],
   "config_flow": true,
