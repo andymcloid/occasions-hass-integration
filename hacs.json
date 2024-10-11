@@ -1,9 +1,9 @@
 {
-  "name": "Occasions",
-  "domain": "occasions",
-  "homeassistant": "2021.12.0",
-  "country": "global",
+  "name": "Occasions Card",
   "content_in_root": false,
+  "filename": "occasions-card.js",
+  "domains": [],
+  "homeassistant": "2021.12.0",
   "render_readme": true,
-  "version": "0.0.14"
+  "zip_release": false
 }

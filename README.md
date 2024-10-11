@@ -18,14 +18,18 @@ It's recommended to restart Homeassistent directly after the installation withou
 Homeassistent will install the dependencies during the next reboot. After that you can add and check the configuration without error messages. 
 This is nothing special to this Integration but the same for all custom components.
 
+## Configuration
 
-# Setup
+To use this card, you can add it via the Lovelace UI or manually in YAML:
 
-## Configuration options
-
-Key | Type | Required | Default | Description
--- | -- | -- | -- | --
-`name` | `string` | `true` | `None` | Name of the occation and sensor
-`date` | `date` | `true` | `None` | Date of the occation
-`icon` | `string` | `false` | `mdi:calendar` | MDI Icon string, check https://materialdesignicons.com/
-`person` | `string` | `false` | `None` | Connect to a Person entity
+```yaml
+type: 'custom:occasions-card'
+title: Occasions
+occasions:
+  - name: "John's Birthday"
+    date: "2024-05-20"
+    icon: "mdi:cake"
+  - name: "Anniversary"
+    date: "2024-06-15"
+    icon: "mdi:heart"
+```
