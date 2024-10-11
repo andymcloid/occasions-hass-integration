@@ -106,106 +106,63 @@ class OccasionsCard extends HTMLElement {
 
 
 class OccasionsCardEditor extends HTMLElement {
-    constructor() {
-        super();
-        this._config = {};
-    }
-
     setConfig(config) {
-        // Ensure occasions array is initialized
         this._config = config || { occasions: [] };
         if (!this._config.occasions) {
             this._config.occasions = [];
         }
-        this.renderEditor();
+        this.render();
     }
 
-    async renderEditor() {
-        if (!this.content) {
-            this.content = document.createElement('div');
-            this.appendChild(this.content);
-        }
-
-        const occasions = this._config.occasions || [];
-
-        // Clear content and re-render it
-        this.content.innerHTML = `
-            <h3>Configure Occasions</h3>
-            <div id="occasion-list"></div>
-            <ha-form
-                .schema=${[
-                    { name: "name", selector: { text: {} } },
-                    { name: "date", selector: { date: {} } },
-                    { name: "icon", selector: { icon: {} } }
-                ]}
-                .data=${this._config}
-                .computeLabel=${(schema) => schema.name}
-                @value-changed=${this._valueChanged}
-            >
-            </ha-form>
-            <button type="button" id="add-occasion">Add Occasion</button>
-        `;
-
-        const occasionList = this.content.querySelector("#occasion-list");
-
-        // Ensure occasions are mapped correctly, preventing undefined issues
-        occasions.forEach((occasion, index) => {
-            if (!occasion) {
-                occasion = { name: '', date: '', icon: 'mdi:calendar' };
-            }
-            const occasionDiv = document.createElement('li');
-            occasionDiv.innerHTML = `
+    render() {
+        this.innerHTML = `
+            <div>
                 <ha-form
                     .schema=${[
                         { name: "name", selector: { text: {} } },
                         { name: "date", selector: { date: {} } },
                         { name: "icon", selector: { icon: {} } }
                     ]}
-                    .data=${occasion}
-                    .computeLabel=${(schema) => schema.name}
-                    @value-changed=${(e) => this._handleEdit(e, index)}
+                    .data=${this._config.occasions[0] || {}}
+                    @value-changed=${this._valueChanged}
                 ></ha-form>
-                <button type="button" data-index="${index}" class="remove-occasion">Remove</button>
-            `;
+                <button type="button" id="add-occasion">Add Occasion</button>
+            </div>
+        `;
 
-            occasionList.appendChild(occasionDiv);
-        });
-
-        // Add event listeners for adding/removing occasions
-        this.content.querySelector("#add-occasion").addEventListener('click', this.addOccasion.bind(this));
-        this.content.querySelectorAll('.remove-occasion').forEach(button => {
-            button.addEventListener('click', (e) => this.removeOccasion(e));
-        });
+        this.querySelector("#add-occasion").addEventListener("click", () => this.addOccasion());
     }
 
-    _handleEdit(event, index) {
-        const field = event.detail.path;
-        const value = event.detail.value;
-        this._config.occasions[index][field] = value;
-        this._updateConfig();
-    }
-
-    addOccasion() {
-        this._config.occasions.push({ name: '', date: '', icon: 'mdi:calendar' });
-        this._updateConfig();
-        this.renderEditor();
-    }
-
-    removeOccasion(e) {
-        const index = e.target.getAttribute('data-index');
-        this._config.occasions.splice(index, 1);
-        this._updateConfig();
-        this.renderEditor();
-    }
-
-    _updateConfig() {
-        const event = new Event('config-changed', {
+    _valueChanged(event) {
+        if (!this._config.occasions) {
+            this._config.occasions = [];
+        }
+        this._config.occasions[0] = event.detail.value;
+        const newEvent = new Event("config-changed", {
             bubbles: true,
             composed: true
         });
-        event.detail = { config: this._config };
-        this.dispatchEvent(event);
+        newEvent.detail = { config: this._config };
+        this.dispatchEvent(newEvent);
+    }
+
+    addOccasion() {
+        if (!this._config.occasions) {
+            this._config.occasions = [];
+        }
+        this._config.occasions.push({ name: '', date: '', icon: 'mdi:calendar' });
+        this.render();
     }
 }
+
+
+
 customElements.define('occasions-card-editor', OccasionsCardEditor);
 customElements.define('occasions-card', OccasionsCard);
+
+window.customCards = window.customCards || [];
+window.customCards.push({
+    type: "occasions-card",
+    name: "Occasions Card",
+    description: "A custom card to display upcoming occasions",
+});
