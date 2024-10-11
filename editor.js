@@ -14,9 +14,9 @@ export class OccasionsCardEditor extends HTMLElement {
             this.content = document.createElement('div');
             this.appendChild(this.content);
         }
-
+    
         const occasions = this._config.occasions || [];
-
+    
         // Clear content and re-render it
         this.content.innerHTML = `
             <h3>Configure Occasions</h3>
@@ -33,19 +33,34 @@ export class OccasionsCardEditor extends HTMLElement {
             <button type="button" id="add-occasion">Add Occasion</button>
             <ul id="occasion-list"></ul>
         `;
-
+    
         const occasionList = this.content.querySelector("#occasion-list");
-
+    
+        // For each occasion, create an editable form
         occasions.forEach((occasion, index) => {
             const occasionDiv = document.createElement('li');
             occasionDiv.innerHTML = `
-                ${occasion.name} - ${occasion.date} <button type="button" data-index="${index}" class="remove-occasion">Remove</button>
+                <label>Name: <input type="text" value="${occasion.name}" data-index="${index}" class="edit-occasion-name"></label>
+                <label>Date: <input type="date" value="${occasion.date}" data-index="${index}" class="edit-occasion-date"></label>
+                <label>Icon: <input type="text" value="${occasion.icon}" data-index="${index}" class="edit-occasion-icon"></label>
+                <button type="button" data-index="${index}" class="remove-occasion">Remove</button>
             `;
-
+    
             occasionList.appendChild(occasionDiv);
         });
-
-        // Add event listeners
+    
+        // Add event listeners for editing fields
+        this.content.querySelectorAll('.edit-occasion-name').forEach(input => {
+            input.addEventListener('change', (e) => this.updateName(e));
+        });
+        this.content.querySelectorAll('.edit-occasion-date').forEach(input => {
+            input.addEventListener('change', (e) => this.updateDate(e));
+        });
+        this.content.querySelectorAll('.edit-occasion-icon').forEach(input => {
+            input.addEventListener('change', (e) => this.updateIcon(e));
+        });
+    
+        // Add event listeners for adding/removing occasions
         this.content.querySelector("#add-occasion").addEventListener('click', this.addOccasion.bind(this));
         this.content.querySelectorAll('.remove-occasion').forEach(button => {
             button.addEventListener('click', (e) => this.removeOccasion(e));
@@ -72,6 +87,24 @@ export class OccasionsCardEditor extends HTMLElement {
         this._config.occasions.splice(index, 1);
         this._updateConfig();
         this.renderEditor();
+    }
+    
+    updateName(event) {
+        const index = event.target.getAttribute('data-index');
+        this._config.occasions[index].name = event.target.value;
+        this._updateConfig();
+    }
+    
+    updateDate(event) {
+        const index = event.target.getAttribute('data-index');
+        this._config.occasions[index].date = event.target.value;
+        this._updateConfig();
+    }
+    
+    updateIcon(event) {
+        const index = event.target.getAttribute('data-index');
+        this._config.occasions[index].icon = event.target.value;
+        this._updateConfig();
     }
 
     _updateConfig() {
