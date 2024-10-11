@@ -7,7 +7,6 @@
      Copyright AndyMcLoid (c) 2024
 */
 
-import { OccasionsCardEditor } from './editor.js';
 class OccasionsCard extends HTMLElement {
     set hass(hass) {
         if (!this.content) {
@@ -106,7 +105,7 @@ class OccasionsCard extends HTMLElement {
 }
 
 
-export class OccasionsCardEditor extends HTMLElement {
+class OccasionsCardEditor extends HTMLElement {
     constructor() {
         super();
         this._config = {};
