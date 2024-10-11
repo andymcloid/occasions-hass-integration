@@ -104,7 +104,7 @@ class OccasionsCard extends HTMLElement {
     }
 }
 
-class OccasionsCardEditor2 extends LitElement {
+class OccasionsCardEditor2 extends HTMLElement {
     setConfig(config) {
       this._config = config;
     }
