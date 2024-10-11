@@ -88,7 +88,7 @@ class OccasionsCard extends HTMLElement {
     }
   
     static getConfigElement() {
-        return document.createElement("occasions-card-editor");
+        return document.createElement("occasions-card-editor2");
     }
   
     static getStubConfig() {
@@ -104,6 +104,31 @@ class OccasionsCard extends HTMLElement {
     }
 }
 
+class OccasionsCardEditor2 extends LitElement {
+    setConfig(config) {
+      this._config = config;
+    }
+  
+    configChanged(newConfig) {
+      const event = new Event("config-changed", {
+        bubbles: true,
+        composed: true,
+      });
+      event.detail = { config: newConfig };
+      this.dispatchEvent(event);
+    }
+  }
+  
+  customElements.define("occasions-card-editor2", OccasionsCardEditor2);
+  window.customCards = window.customCards || [];
+  window.customCards.push({
+    type: "occasions-card",
+    name: "Occasions Card",
+    preview: false, // Optional - defaults to false
+    description: "A custom card made by me!", // Optional
+    documentationURL:
+      "https://developers.home-assistant.io/docs/frontend/custom-ui/custom-card", // Adds a help link in the frontend card editor
+  });
 
 class OccasionsCardEditor extends HTMLElement {
     setConfig(config) {
@@ -153,6 +178,7 @@ class OccasionsCardEditor extends HTMLElement {
         this._config.occasions.push({ name: '', date: '', icon: 'mdi:calendar' });
         this.render();
     }
+    
 }
 
 
