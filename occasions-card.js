@@ -112,7 +112,11 @@ class OccasionsCardEditor extends HTMLElement {
     }
 
     setConfig(config) {
+        // Ensure occasions array is initialized
         this._config = config || { occasions: [] };
+        if (!this._config.occasions) {
+            this._config.occasions = [];
+        }
         this.renderEditor();
     }
 
@@ -144,8 +148,11 @@ class OccasionsCardEditor extends HTMLElement {
 
         const occasionList = this.content.querySelector("#occasion-list");
 
-        // For each occasion, create an editable form using ha-form selectors
+        // Ensure occasions are mapped correctly, preventing undefined issues
         occasions.forEach((occasion, index) => {
+            if (!occasion) {
+                occasion = { name: '', date: '', icon: 'mdi:calendar' };
+            }
             const occasionDiv = document.createElement('li');
             occasionDiv.innerHTML = `
                 <ha-form
@@ -200,6 +207,5 @@ class OccasionsCardEditor extends HTMLElement {
         this.dispatchEvent(event);
     }
 }
-
 customElements.define('occasions-card-editor', OccasionsCardEditor);
 customElements.define('occasions-card', OccasionsCard);
