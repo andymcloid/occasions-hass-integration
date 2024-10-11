@@ -1,3 +1,5 @@
+import { loadEditor } from "./editor.js";
+
 class OccasionsCard extends HTMLElement {
     set hass(hass) {
         if (!this.content) {
@@ -30,6 +32,14 @@ class OccasionsCard extends HTMLElement {
 
     static getConfigElement() {
         return document.createElement("occasions-card-editor");
+    }
+
+    static getStubConfig() {
+        return {
+            occasions: [
+                { name: "Birthday", date: "2024-05-20", icon: "mdi:cake" }
+            ]
+        };
     }
 
     getCardSize() {
