@@ -11,6 +11,7 @@ class OccasionsCard extends HTMLElement {
         // Get the list of occasions from config
         const occasions = this.config.occasions || [];
         
+
         this.content.innerHTML = `
             <ul style="list-style-type: none; padding: 0;">
                 ${occasions.map(occasion => `
