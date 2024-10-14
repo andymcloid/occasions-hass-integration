@@ -77,7 +77,7 @@ class OccasionsCard extends HTMLElement {
         return occasionList.map(occasion => `
             <div class='bd-wrapper ${isToday ? 'bd-today' : ''}'>
                 <ha-icon class='ha-icon ${isToday ? 'on' : ''}' icon='${occasion.icon || (isToday ? "mdi:crown" : "mdi:calendar-clock")}'></ha-icon>
-                <div class='bd-name'>${occasion.name}</div>
+                <div class='bd-name'>${occasion.name} (${occasion.ts})</div>
                 <div class='bd-when'>${isToday ? todayText : `in ${occasion.diff} days`}</div>
             </div>
         `).join("");
