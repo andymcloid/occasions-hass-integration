@@ -97,9 +97,9 @@ class OccasionsCard extends HTMLElement {
         this.config = config;
     }
   
-    static getConfigElement() {
-        return document.createElement("occasions-card-editor");
-    }
+    // static getConfigElement() {
+    //     return document.createElement("occasions-card-editor");
+    // }
   
     static getStubConfig() {
         return {
@@ -114,57 +114,57 @@ class OccasionsCard extends HTMLElement {
     }
 }
 
-class OccasionsCardEditor extends HTMLElement {
-    setConfig(config) {
-        this._config = config || { occasions: [] };
-        if (!this._config.occasions) {
-            this._config.occasions = [];
-        }
-        this.render();
-    }
+// class OccasionsCardEditor extends HTMLElement {
+//     setConfig(config) {
+//         this._config = config || { occasions: [] };
+//         if (!this._config.occasions) {
+//             this._config.occasions = [];
+//         }
+//         this.render();
+//     }
 
-    render() {
-        this.innerHTML = `
-            <div>
-                <ha-form
-                    .schema=${[
-                        { name: "name", selector: { text: {} } },
-                        { name: "date", selector: { date: {} } },
-                        { name: "icon", selector: { icon: {} } }
-                    ]}
-                    .data=${this._config.occasions[0] || {}}
-                    @value-changed=${this._valueChanged}
-                ></ha-form>
-                <button type="button" id="add-occasion">Add Occasion</button>
-            </div>
-        `;
+//     render() {
+//         this.innerHTML = `
+//             <div>
+//                 <ha-form
+//                     .schema=${[
+//                         { name: "name", selector: { text: {} } },
+//                         { name: "date", selector: { date: {} } },
+//                         { name: "icon", selector: { icon: {} } }
+//                     ]}
+//                     .data=${this._config.occasions[0] || {}}
+//                     @value-changed=${this._valueChanged}
+//                 ></ha-form>
+//                 <button type="button" id="add-occasion">Add Occasion</button>
+//             </div>
+//         `;
 
-        this.querySelector("#add-occasion").addEventListener("click", () => this.addOccasion());
-    }
+//         this.querySelector("#add-occasion").addEventListener("click", () => this.addOccasion());
+//     }
 
-    _valueChanged(event) {
-        if (!this._config.occasions) {
-            this._config.occasions = [];
-        }
-        this._config.occasions[0] = event.detail.value;
-        const newEvent = new Event("config-changed", {
-            bubbles: true,
-            composed: true
-        });
-        newEvent.detail = { config: this._config };
-        this.dispatchEvent(newEvent);
-    }
+//     _valueChanged(event) {
+//         if (!this._config.occasions) {
+//             this._config.occasions = [];
+//         }
+//         this._config.occasions[0] = event.detail.value;
+//         const newEvent = new Event("config-changed", {
+//             bubbles: true,
+//             composed: true
+//         });
+//         newEvent.detail = { config: this._config };
+//         this.dispatchEvent(newEvent);
+//     }
 
-    addOccasion() {
-        if (!this._config.occasions) {
-            this._config.occasions = [];
-        }
-        this._config.occasions.push({ name: '', date: '', icon: 'mdi:calendar' });
-        this.render();
-    }
+//     addOccasion() {
+//         if (!this._config.occasions) {
+//             this._config.occasions = [];
+//         }
+//         this._config.occasions.push({ name: '', date: '', icon: 'mdi:calendar' });
+//         this.render();
+//     }
     
-}
+// }
 
 
-customElements.define('occasions-card-editor', OccasionsCardEditor);
+//customElements.define('occasions-card-editor', OccasionsCardEditor);
 customElements.define('occasions-card', OccasionsCard);
