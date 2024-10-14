@@ -36,7 +36,7 @@ class OccasionsCard extends HTMLElement {
             const birthdayPassed = (occasionMonth < current.getMonth()) || 
                                    (occasionMonth === current.getMonth() && occasionDay < current.getDate());
             if (occasionDate.getFullYear() > 0)
-				age = current.getFullYear() - occasionDate.getFullYear() + (birthdayPassed ? 1 : 0);
+				clonedOccasion.age = current.getFullYear() - occasionDate.getFullYear() + (birthdayPassed ? 1 : 0);
 
             clonedOccasion.ts = new Date(current.getFullYear() + yearToAdd, occasionMonth, occasionDay).getTime();
             clonedOccasion.diff = Math.round(Math.abs((currentDayTS - clonedOccasion.ts) / oneDay));
