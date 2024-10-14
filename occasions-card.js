@@ -17,7 +17,13 @@ class OccasionsCard extends HTMLElement {
             card.appendChild(this.content);
             this.appendChild(card);
         }
-  
+
+        // Translations
+        const lz_year = hass.localize("ui.components.time.duration.year");
+        const lz_days = hass.localize("ui.components.time.duration.days");
+        const lz_today = hass.localize("ui.components.relative_time.today");
+        const lz_tomorrow = hass.localize("ui.components.relative_time.tomorrow");
+
         // Get the list of occasions from config
         const occasions = this.config.occasions || [];
         const numberOfDays = this.config.numberofdays || 365; //TODO: Implement property 
@@ -59,11 +65,11 @@ class OccasionsCard extends HTMLElement {
   
         const occasionsToday = this.generateOccasionHtml(
             sortedOccasions.filter(occasion => occasion.diff === 0), 
-            "Idag", true
+            lz_today, true
         );
         const upcomingOccasions = this.generateOccasionHtml(
             sortedOccasions.filter(occasion => occasion.diff > 0), 
-            "Imorgon", false
+            lz_tomorrow, false
         );
   
         this.content.innerHTML = `
@@ -87,8 +93,8 @@ class OccasionsCard extends HTMLElement {
         return occasionList.map(occasion => `
             <div class='bd-wrapper ${isToday ? 'bd-today' : ''}'>
                 <ha-icon class='ha-icon ${isToday ? 'on' : ''}' icon='${occasion.icon || (isToday ? "mdi:crown" : "mdi:calendar-clock")}'></ha-icon>
-                <div class='bd-name'>${occasion.name} ${occasion.count ? '(' + occasion.age + ')' : ''}</div>
-                <div class='bd-when'>${isToday ? todayText : `in ${occasion.diff} days`}</div>
+                <div class='bd-name'>${occasion.name} ${occasion.count ? '(' + occasion.age + ' ' + lz_year + ')' : ''}</div>
+                <div class='bd-when'>${isToday ? todayText : `${occasion.diff} ${lz_days}`}</div>
             </div>
         `).join("");
     }
