@@ -32,4 +32,8 @@ occasions:
   - name: "Anniversary"
     date: "2024-06-15"
     icon: "mdi:heart"
+  - name: "Christmas Day"
+    date: "1900-12-25"
+    icon: "mdi:pine-tree"
+    count: false
 ```
