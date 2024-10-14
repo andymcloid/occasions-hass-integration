@@ -31,7 +31,12 @@ class OccasionsCard extends HTMLElement {
             const occasionDate = new Date(clonedOccasion.date);
             const occasionMonth = occasionDate.getMonth();
             const occasionDay = occasionDate.getDate();
-  
+            clonedOccasion.age = 0;
+
+            if (occasionDate.getFullYear() <= 0) {
+				age = current.getFullYear() - occasionDate.getFullYear() + yearToAdd;
+			} 
+
             const birthdayPassed = (occasionMonth < current.getMonth()) || 
                                    (occasionMonth === current.getMonth() && occasionDay < current.getDate());
             const yearToAdd = birthdayPassed ? 1 : 0;
@@ -77,7 +82,7 @@ class OccasionsCard extends HTMLElement {
         return occasionList.map(occasion => `
             <div class='bd-wrapper ${isToday ? 'bd-today' : ''}'>
                 <ha-icon class='ha-icon ${isToday ? 'on' : ''}' icon='${occasion.icon || (isToday ? "mdi:crown" : "mdi:calendar-clock")}'></ha-icon>
-                <div class='bd-name'>${occasion.name} (${occasion.ts})</div>
+                <div class='bd-name'>${occasion.name} (${occasion.age})</div>
                 <div class='bd-when'>${isToday ? todayText : `in ${occasion.diff} days`}</div>
             </div>
         `).join("");
