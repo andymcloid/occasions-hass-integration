@@ -22,7 +22,6 @@ class OccasionsCard extends HTMLElement {
         const lz_year = hass.localize("ui.components.time.duration.year");
         const lz_days = hass.localize("ui.components.time.duration.days");
         const lz_today = hass.localize("ui.components.relative_time.today");
-        const lz_tomorrow = hass.localize("ui.components.relative_time.tomorrow");
 
         // Get the list of occasions from config
         const occasions = this.config.occasions || [];
@@ -63,14 +62,8 @@ class OccasionsCard extends HTMLElement {
             .filter(occasion => occasion.ts !== 0)
             .sort((a, b) => a.ts - b.ts);
   
-        const occasionsToday = this.generateOccasionHtml(
-            sortedOccasions.filter(occasion => occasion.diff === 0), 
-            lz_today, true
-        );
-        const upcomingOccasions = this.generateOccasionHtml(
-            sortedOccasions.filter(occasion => occasion.diff > 0), 
-            lz_tomorrow, false
-        );
+        const occasionsToday = this.generateOccasionHtml(sortedOccasions.filter(occasion => occasion.diff === 0), true, lz_today, lz_year, lz_days);
+        const upcomingOccasions = this.generateOccasionHtml(sortedOccasions.filter(occasion => occasion.diff > 0), false, lz_today, lz_year, lz_days);
   
         this.content.innerHTML = `
             <style>
@@ -89,7 +82,7 @@ class OccasionsCard extends HTMLElement {
         `;
     }
   
-    generateOccasionHtml(occasionList, todayText, isToday) {
+    generateOccasionHtml(occasionList, isToday, lz_today, lz_year, lz_days) {
         return occasionList.map(occasion => `
             <div class='bd-wrapper ${isToday ? 'bd-today' : ''}'>
                 <ha-icon class='ha-icon ${isToday ? 'on' : ''}' icon='${occasion.icon || (isToday ? "mdi:crown" : "mdi:calendar-clock")}'></ha-icon>
