@@ -19,9 +19,14 @@ class OccasionsCard extends HTMLElement {
         }
 
         // Translations
-        const lz_year = hass.localize("ui.components.time.duration.year");
-        const lz_days = hass.localize("ui.components.time.duration.days");
-        const lz_today = hass.localize("ui.components.relative_time.today");
+        const lz_days = hass.localize("ui.components.calendar.event.repeat.interval.daily");
+        const lz_year = hass.localize("ui.components.calendar.event.rrule.year");
+        const lz_today = hass.localize("ui.components.date-range-picker.ranges.today");
+        const lz_nonot = hass.localize("ui.notification_drawer.empty");
+        const lz_in = hass.localize("ui.components.calendar.event.rrule.in");
+
+        
+        
 
         // Get the list of occasions from config
         const occasions = this.config.occasions || [];
@@ -64,7 +69,7 @@ class OccasionsCard extends HTMLElement {
   
         const occasionsToday = this.generateOccasionHtml(sortedOccasions.filter(occasion => occasion.diff === 0), true, lz_today, lz_year, lz_days);
         const upcomingOccasions = this.generateOccasionHtml(sortedOccasions.filter(occasion => occasion.diff > 0), false, lz_today, lz_year, lz_days);
-  
+
         this.content.innerHTML = `
             <style>
                 .bd-wrapper { padding: 5px; margin-bottom: 5px; }
@@ -78,7 +83,7 @@ class OccasionsCard extends HTMLElement {
             </style>
             ${occasionsToday ? `${occasionsToday}${upcomingOccasions ? "<div class='bd-divider'></div>" + upcomingOccasions : ""}` : 
                 upcomingOccasions ? upcomingOccasions : 
-                `<div class='bd-none'>No occasions in ${numberOfDays} days</div>`}
+                `<div class='bd-none'>${lz_nonot} ${lz_in} ${numberOfDays} ${lz_days}</div>`}
         `;
     }
   
