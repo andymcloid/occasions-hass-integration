@@ -41,7 +41,7 @@ class OccasionsCard extends HTMLElement {
             clonedOccasion.age = 0;
 
             // Default true if not set.
-            if (clonedOccasion.count === undefined) {
+            if (clonedOccasion.count === undefined)
                 clonedOccasion.count = true;
 
             const birthdayPassed = (occasionMonth < current.getMonth()) || 
