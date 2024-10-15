@@ -37,3 +37,19 @@ occasions:
     icon: "mdi:pine-tree"
     count: false
 ```
+
+## Options
+
+### Card
+| Name       | Type    | Default        | Description |
+| ---------- | ------- | -------------- | ----------- |
+| type       | string  |                | `custom:occasions-card`
+| title      | string  | `Occasions`    | Title of the card
+| occasions  | list    |                | List of occasions to display
+### Occasion
+| Name       | Type    | Default        | Description |
+| ---------- | ------- | -------------- | ----------- |
+| name       | string  | `Jimmy Riddle` | Name of the person or the event
+| date       | date    |                | Date of the event
+| icon       | string  | `mdi:calendar` | Icon
+| count      | bool    | `true`         | Show the number of years

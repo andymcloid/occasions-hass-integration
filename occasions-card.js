@@ -1,9 +1,9 @@
 /*
-     █████   █████  ██████  ██████ █████ █████  █████  █     █ █████   █████  ██████ █████  ██████  
-    █     █ █     █ █     █ █    █ █       █   █     █ ███   █ █      █     █ █    █ █    █ █     █ 
-    █     █ █       █       ██████ █████   █   █     █ █ ██  █ █████  █       ██████ █████  █     █ 
+     █████   █████  ██████  ██████ █████ █████  █████  █     █ █████   █████  ██████ █████  ██████
+    █     █ █     █ █     █ █    █ █       █   █     █ ███   █ █      █     █ █    █ █    █ █     █
+    █     █ █       █       ██████ █████   █   █     █ █ ██  █ █████  █       ██████ █████  █     █
     █     █ █     █ █     █ █    █     █   █   █     █ █  ██ █     █  █     █ █    █ █   █  █     █
-     █████   █████  ██████  █    █ █████ █████  █████  █    ██ █████   █████  █    █ █    █ ██████  
+     █████   █████  ██████  █    █ █████ █████  █████  █    ██ █████   █████  █    █ █    █ ██████
      Copyright AndyMcLoid (c) 2024
 */
 
@@ -31,11 +31,11 @@ class OccasionsCard extends HTMLElement {
         // Get the list of occasions from config
         const occasions = this.config.occasions || [];
         const numberOfDays = this.config.numberofdays || 365;
-  
+
         const current = new Date();
         const currentDayTS = new Date(current.getFullYear(), current.getMonth(), current.getDate()).getTime();
         const oneDay = 86400000; // 24 * 60 * 60 * 1000
-  
+
         const updatedOccasions = occasions.map(occasion => {
 
             const clonedOccasion = { ...occasion }; // Clone the object to avoid modifying the original
@@ -48,7 +48,7 @@ class OccasionsCard extends HTMLElement {
             if (clonedOccasion.count === undefined)
                 clonedOccasion.count = true;
 
-            const birthdayPassed = (occasionMonth < current.getMonth()) || 
+            const birthdayPassed = (occasionMonth < current.getMonth()) ||
                                    (occasionMonth === current.getMonth() && occasionDay < current.getDate());
             const yearToAdd = birthdayPassed ? 1 : 0;
             if (occasionDate.getFullYear() > 0)
@@ -57,16 +57,16 @@ class OccasionsCard extends HTMLElement {
 
             clonedOccasion.ts = new Date(current.getFullYear() + yearToAdd, occasionMonth, occasionDay).getTime();
             clonedOccasion.diff = Math.round(Math.abs((currentDayTS - clonedOccasion.ts) / oneDay));
-  
+
             if (clonedOccasion.diff > numberOfDays) clonedOccasion.ts = 0;
-  
+
             return clonedOccasion;
         });
-  
+
         const sortedOccasions = updatedOccasions
             .filter(occasion => occasion.ts !== 0)
             .sort((a, b) => a.ts - b.ts);
-  
+
         const occasionsToday = this.generateOccasionHtml(sortedOccasions.filter(occasion => occasion.diff === 0), true, translations);
         const upcomingOccasions = this.generateOccasionHtml(sortedOccasions.filter(occasion => occasion.diff > 0), false, translations);
 
@@ -81,30 +81,30 @@ class OccasionsCard extends HTMLElement {
                 .bd-none { color: var(--paper-item-icon-color); }
                 .bd-when { display: inline-block; float: right; font-size: smaller; padding-top: 3px; }
             </style>
-            ${occasionsToday ? `${occasionsToday}${upcomingOccasions ? "<div class='bd-divider'></div>" + upcomingOccasions : ""}` : 
-                upcomingOccasions ? upcomingOccasions : 
+            ${occasionsToday ? `${occasionsToday}${upcomingOccasions ? "<div class='bd-divider'></div>" + upcomingOccasions : ""}` :
+                upcomingOccasions ? upcomingOccasions :
                 `<div class='bd-none'>${translations.nonot} ${translations.in} ${numberOfDays} ${translations.days}</div>`}
         `;
     }
-  
+
     generateOccasionHtml(occasionList, isToday, translations) {
         return occasionList.map(occasion => `
             <div class='bd-wrapper ${isToday ? 'bd-today' : ''}'>
-                <ha-icon class='ha-icon ${isToday ? 'on' : ''}' icon='${occasion.icon || (isToday ? "mdi:crown" : "mdi:calendar-clock")}'></ha-icon>
+                <ha-icon class='ha-icon ${isToday ? 'on' : ''}' icon='${occasion.icon || (isToday ? "mdi:crown" : "mdi:calendar")}'></ha-icon>
                 <div class='bd-name'>${occasion.name} ${occasion.count ? '(' + occasion.age + ' ' + translations.years + ')' : ''}</div>
                 <div class='bd-when'>${isToday ? todayText : `${occasion.diff} ${translations.days}`}</div>
             </div>
         `).join("");
     }
-  
+
     setConfig(config) {
         this.config = config;
     }
-  
-    // static getConfigElement() {
-    //     return document.createElement("occasions-card-editor");
-    // }
-  
+
+    static getConfigElement() {
+        return document.createElement("occasions-card-editor");
+    }
+
     static getStubConfig() {
         return {
             occasions: [
@@ -112,93 +112,189 @@ class OccasionsCard extends HTMLElement {
             ]
         };
     }
-  
+
     getCardSize() {
         return 3;
     }
 }
 
-class OccasionsCardEditor extends HTMLElement {
+import { LitElement, html, css } from 'https://unpkg.com/lit@2.2.7/index.js?module';
+import { EditorForm  } from '@marcokreeft/ha-editor-formbuilder';
+
+class OccasionsCardEditor extends EditorForm  {
+    constructor() {
+        super();
+        this._hass = null;
+        this.config = { occasions: [] };
+        this.schema = [
+          { name: 'name', selector: { text: {} } },
+          { name: 'date', selector: { date: {} } },
+          { name: 'icon', selector: { icon: {} } },
+        ];
+
+      this.schema = [
+        { name: 'title', selector: { text: {} } },
+        { name: 'energy_date_selection', selector: { boolean: {} } },
+        {
+          type: 'grid',
+          name: '',
+          schema: [
+            { name: 'time_period_from', selector: { text: {} } },
+            { name: 'time_period_to', selector: { text: {} } },
+            { name: 'show_names', selector: { boolean: {} } },
+            { name: 'show_icons', selector: { boolean: {} } },
+            { name: 'show_states', selector: { boolean: {} } },
+            { name: 'show_units', selector: { boolean: {} } },
+            {
+              name: 'layout',
+              selector: {
+                select: {
+                  mode: 'dropdown',
+                  options: [
+                    { value: 'auto', label: 'xyz' },
+                    { value: 'horizontal', label: 'xyz' },
+                    { value: 'vertical', label: 'xyz' },
+                  ],
+                },
+              },
+            },
+            { name: 'wide', selector: { boolean: {} } },
+            { name: 'height', selector: { number: { mode: 'box', unit_of_measurement: 'px' } } },
+            { name: 'min_box_size', selector: { number: { mode: 'box', unit_of_measurement: 'px' } } },
+            { name: 'min_box_distance', selector: { number: { mode: 'box', unit_of_measurement: 'px' } } },
+          ],
+        },
+        {
+          type: 'grid',
+          name: '',
+          schema: [
+            { name: 'min_state', selector: { number: { mode: 'box', min: 0, step: 'any' } } },
+            { name: 'static_scale', selector: { number: { mode: 'box' } } },
+            { name: 'round', selector: { number: { mode: 'box', unit_of_measurement: 'xyz' } } },
+           
+            {
+              name: 'sort_by',
+              selector: {
+                select: {
+                  mode: 'dropdown',
+                  options: [
+                    { value: 'none', label: 'xyz' },
+                    { value: 'state', label: 'xyz' },
+                  ],
+                },
+              },
+            },
+            {
+              name: 'sort_dir',
+              selector: {
+                select: {
+                  mode: 'dropdown',
+                  options: [
+                    { value: '' },
+                    { value: 'desc', label: 'desc' },
+                    { value: 'asc', label: 'asc' },
+                  ],
+                },
+              },
+            },
+            { name: 'throttle', selector: { number: { mode: 'box', unit_of_measurement: 'ms' } } },
+          ],
+        },
+      ];
+
+
+        this._editIndex = null; // Track the index of the item being edited
+    }
+
+    static get properties() {
+        return {
+          _hass: { type: Object },  // Home Assistant object
+          config: { type: Object },  // Configuration object
+          schema: { type: Array },  // Schema for the ha-form fields
+          _editIndex: { type: Number },  // Track the currently edited item
+        };
+      }
+
+
+    static styles = css`
+      div {
+        padding: 10px;
+      }
+      mwc-icon-button {
+        vertical-align: middle;
+      }
+    `;
+
     setConfig(config) {
-        this._config = config || { occasions: [] };
-        if (!this._config.occasions) {
-            this._config.occasions = [];
+        this.config = config || { occasions: [] };
+        if (!this.config.occasions) {
+            this.config.occasions = [];
         }
-        this.render();
+        this.render(); // Trigger re-render when config is set
     }
     set hass(hass) {
         this._hass = hass;
+        this.render(); // Trigger re-render when hass is set
     }
-    static get properties() {
-        return {
-          hass: {},
-          _config: {},
-        };
-    }
+
 
     render() {
 
-        this.innerHTML = `
-                <ha-form
-                .hass=${this._hass}
-                .data=${this._config}
-                .schema=${[
-                {name: "entity", selector: { entity: { domain: "plant" } }},
-                {name: "battery_sensor", selector: { text: {} }},
-                {name: "show_bars", selector: { select: { multiple: true, mode: "list", options: [
-                    {label: "Moisture", value: "moisture"},
-                    {label: "Conductivity", value: "conductivity"}, 
-                    {label: "Temperature", value: "temperature"},
-                    {label: "Illuminance", value: "illuminance"}, 
-                    {label: "Humidity", value: "humidity"},
-                    {label: "Daily Light Integral", value: "dli"}
-                    ]} 
-                }}
-                ]}
-                @value-changed=${this._valueChanged} 
-                ></ha-form>
+        // Make sure necessary data is available
+        if (!this._hass || !this.config || !this.schema) {
+            return;
+        }
+
+        return html`
+            <div class="card-config">
+            <div class="options">
+            <div class="autoconfig">
+              <ha-form-grid
+                  .hass=${this.hass}
+                  .data=${this.config.occasions[this._editIndex]}
+                  .schema=${this.schema}
+                  @value-changed=${this._valueChanged}
+                ></ha-form-grid>
+            </div>
+            </div>
+            </div>
         `;
-        // this.innerHTML = `
-        //     <div>
-        //         <ha-form
-        //             .schema=${[
-        //                 { name: "name", selector: { text: {} } },
-        //                 { name: "date", selector: { date: {} } },
-        //                 { name: "icon", selector: { icon: {} } }
-        //             ]}
-        //             .data=${this._config.occasions[0] || {}}
-        //             @value-changed=${this._valueChanged}
-        //         ></ha-form>
-        //         <button type="button" id="add-occasion">Add Occasion</button>
-        //     </div>
-        // `;
 
-       // this.querySelector("#add-occasion").addEventListener("click", () => this.addOccasion());
-    }
+      }
 
-    _valueChanged(event) {
-        if (!this._config.occasions) {
-            this._config.occasions = [];
-        }
-        this._config.occasions[0] = event.detail.value;
-        const newEvent = new Event("config-changed", {
-            bubbles: true,
-            composed: true
+      _editOccasion(index) {
+        this._editIndex = index;
+      }
+
+      _addOccasion() {
+        this.config.occasions.push({
+          name: '',
+          date: '',
+          icon: '',
         });
-        newEvent.detail = { config: this._config };
-        this.dispatchEvent(newEvent);
-    }
+        this._editIndex = this.config.occasions.length - 1; // Set the new occasion to be edited
+      }
 
-    addOccasion() {
-        if (!this._config.occasions) {
-            this._config.occasions = [];
-        }
-        this._config.occasions.push({ name: '', date: '', icon: 'mdi:calendar' });
-        this.render();
-    }
-    
+      _valueChanged(event) {
+        const updatedValue = event.detail.value;
+        this.config.occasions[this._editIndex] = {
+          ...this.config.occasions[this._editIndex],
+          ...updatedValue,
+        };
+
+        // Dispatch config-changed event
+        this.dispatchEvent(
+          new CustomEvent('config-changed', {
+            detail: { config: this.config },
+            bubbles: true,
+            composed: true,
+          })
+        );
+      }
+
+
 }
 
 
-//customElements.define('occasions-card-editor', OccasionsCardEditor);
+customElements.define('occasions-card-editor', OccasionsCardEditor);
 customElements.define('occasions-card', OccasionsCard);
