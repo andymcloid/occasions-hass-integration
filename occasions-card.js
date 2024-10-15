@@ -119,9 +119,8 @@ class OccasionsCard extends HTMLElement {
 }
 
 import { LitElement, html, css } from 'https://unpkg.com/lit@2.2.7/index.js?module';
-import { EditorForm  } from '@marcokreeft/ha-editor-formbuilder';
 
-class OccasionsCardEditor extends EditorForm  {
+class OccasionsCardEditor extends LitElement  {
     constructor() {
         super();
         this._hass = null;
