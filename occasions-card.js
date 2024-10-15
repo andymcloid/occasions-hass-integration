@@ -19,14 +19,19 @@ class OccasionsCard extends HTMLElement {
         }
 
         // Translations
-        const lz_days = hass.localize("ui.components.calendar.event.repeat.interval.daily");
-        const lz_year = hass.localize("ui.components.calendar.event.rrule.year");
-        const lz_today = hass.localize("ui.components.date-range-picker.ranges.today");
-        const lz_nonot = hass.localize("ui.notification_drawer.empty");
-        const lz_in = hass.localize("ui.components.calendar.event.rrule.in");
-
-        
-        
+        const translations = {
+            "days": hass.localize("ui.components.calendar.event.repeat.interval.daily"),
+            "year": hass.localize("ui.components.calendar.event.rrule.year"),
+            "years": hass.localize("ui.components.calendar.event.rrule.years"),
+            "today": hass.localize("ui.components.date-range-picker.ranges.today"),
+            "nonot": hass.localize("ui.notification_drawer.empty"),
+            "in": hass.localize("ui.components.calendar.event.rrule.in")
+        };
+        //const lz_days = hass.localize("ui.components.calendar.event.repeat.interval.daily");
+        //const lz_year = hass.localize("ui.components.calendar.event.rrule.year");
+        //const lz_today = hass.localize("ui.components.date-range-picker.ranges.today");
+        //const lz_nonot = hass.localize("ui.notification_drawer.empty");
+        //const lz_in = hass.localize("ui.components.calendar.event.rrule.in");
 
         // Get the list of occasions from config
         const occasions = this.config.occasions || [];
