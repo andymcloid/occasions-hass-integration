@@ -2,7 +2,7 @@
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/hacs/integration)
 
-Setup entities for occasions like birthdays, aniversarys and holidays. Included is also a lovelace card to show the countdown to these events.
+Setup entities for occasions like birthdays, aniversarys and holidays. Occasions is a lovelace card to show the countdown to these events.
 
 ![occasions mov](https://raw.githubusercontent.com/andymcloid/occasions-hass-integration/refs/heads/main/screenshot.png)
 

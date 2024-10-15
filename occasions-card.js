@@ -27,15 +27,10 @@ class OccasionsCard extends HTMLElement {
             "nonot": hass.localize("ui.notification_drawer.empty"),
             "in": hass.localize("ui.components.calendar.event.rrule.in")
         };
-        //const lz_days = hass.localize("ui.components.calendar.event.repeat.interval.daily");
-        //const lz_year = hass.localize("ui.components.calendar.event.rrule.year");
-        //const lz_today = hass.localize("ui.components.date-range-picker.ranges.today");
-        //const lz_nonot = hass.localize("ui.notification_drawer.empty");
-        //const lz_in = hass.localize("ui.components.calendar.event.rrule.in");
 
         // Get the list of occasions from config
         const occasions = this.config.occasions || [];
-        const numberOfDays = this.config.numberofdays || 365; //TODO: Implement property 
+        const numberOfDays = this.config.numberofdays || 365;
   
         const current = new Date();
         const currentDayTS = new Date(current.getFullYear(), current.getMonth(), current.getDate()).getTime();
@@ -72,8 +67,8 @@ class OccasionsCard extends HTMLElement {
             .filter(occasion => occasion.ts !== 0)
             .sort((a, b) => a.ts - b.ts);
   
-        const occasionsToday = this.generateOccasionHtml(sortedOccasions.filter(occasion => occasion.diff === 0), true, lz_today, lz_year, lz_days);
-        const upcomingOccasions = this.generateOccasionHtml(sortedOccasions.filter(occasion => occasion.diff > 0), false, lz_today, lz_year, lz_days);
+        const occasionsToday = this.generateOccasionHtml(sortedOccasions.filter(occasion => occasion.diff === 0), true, translations);
+        const upcomingOccasions = this.generateOccasionHtml(sortedOccasions.filter(occasion => occasion.diff > 0), false, translations);
 
         this.content.innerHTML = `
             <style>
@@ -88,16 +83,16 @@ class OccasionsCard extends HTMLElement {
             </style>
             ${occasionsToday ? `${occasionsToday}${upcomingOccasions ? "<div class='bd-divider'></div>" + upcomingOccasions : ""}` : 
                 upcomingOccasions ? upcomingOccasions : 
-                `<div class='bd-none'>${lz_nonot} ${lz_in} ${numberOfDays} ${lz_days}</div>`}
+                `<div class='bd-none'>${translations.nonot} ${translations.in} ${numberOfDays} ${translations.days}</div>`}
         `;
     }
   
-    generateOccasionHtml(occasionList, isToday, lz_today, lz_year, lz_days) {
+    generateOccasionHtml(occasionList, isToday, translations) {
         return occasionList.map(occasion => `
             <div class='bd-wrapper ${isToday ? 'bd-today' : ''}'>
                 <ha-icon class='ha-icon ${isToday ? 'on' : ''}' icon='${occasion.icon || (isToday ? "mdi:crown" : "mdi:calendar-clock")}'></ha-icon>
-                <div class='bd-name'>${occasion.name} ${occasion.count ? '(' + occasion.age + ' ' + lz_year + ')' : ''}</div>
-                <div class='bd-when'>${isToday ? todayText : `${occasion.diff} ${lz_days}`}</div>
+                <div class='bd-name'>${occasion.name} ${occasion.count ? '(' + occasion.age + ' ' + translations.years + ')' : ''}</div>
+                <div class='bd-when'>${isToday ? todayText : `${occasion.diff} ${translations.days}`}</div>
             </div>
         `).join("");
     }
@@ -123,56 +118,86 @@ class OccasionsCard extends HTMLElement {
     }
 }
 
-// class OccasionsCardEditor extends HTMLElement {
-//     setConfig(config) {
-//         this._config = config || { occasions: [] };
-//         if (!this._config.occasions) {
-//             this._config.occasions = [];
-//         }
-//         this.render();
-//     }
+class OccasionsCardEditor extends HTMLElement {
+    setConfig(config) {
+        this._config = config || { occasions: [] };
+        if (!this._config.occasions) {
+            this._config.occasions = [];
+        }
+        this.render();
+    }
+    set hass(hass) {
+        this._hass = hass;
+    }
+    static get properties() {
+        return {
+          hass: {},
+          _config: {},
+        };
+    }
 
-//     render() {
-//         this.innerHTML = `
-//             <div>
-//                 <ha-form
-//                     .schema=${[
-//                         { name: "name", selector: { text: {} } },
-//                         { name: "date", selector: { date: {} } },
-//                         { name: "icon", selector: { icon: {} } }
-//                     ]}
-//                     .data=${this._config.occasions[0] || {}}
-//                     @value-changed=${this._valueChanged}
-//                 ></ha-form>
-//                 <button type="button" id="add-occasion">Add Occasion</button>
-//             </div>
-//         `;
+    render() {
 
-//         this.querySelector("#add-occasion").addEventListener("click", () => this.addOccasion());
-//     }
+        this.innerHTML = `
+                <ha-form
+                .hass=${this._hass}
+                .data=${this._config}
+                .schema=${[
+                {name: "entity", selector: { entity: { domain: "plant" } }},
+                {name: "battery_sensor", selector: { text: {} }},
+                {name: "show_bars", selector: { select: { multiple: true, mode: "list", options: [
+                    {label: "Moisture", value: "moisture"},
+                    {label: "Conductivity", value: "conductivity"}, 
+                    {label: "Temperature", value: "temperature"},
+                    {label: "Illuminance", value: "illuminance"}, 
+                    {label: "Humidity", value: "humidity"},
+                    {label: "Daily Light Integral", value: "dli"}
+                    ]} 
+                }}
+                ]}
+                @value-changed=${this._valueChanged} 
+                ></ha-form>
+        `;
+        // this.innerHTML = `
+        //     <div>
+        //         <ha-form
+        //             .schema=${[
+        //                 { name: "name", selector: { text: {} } },
+        //                 { name: "date", selector: { date: {} } },
+        //                 { name: "icon", selector: { icon: {} } }
+        //             ]}
+        //             .data=${this._config.occasions[0] || {}}
+        //             @value-changed=${this._valueChanged}
+        //         ></ha-form>
+        //         <button type="button" id="add-occasion">Add Occasion</button>
+        //     </div>
+        // `;
 
-//     _valueChanged(event) {
-//         if (!this._config.occasions) {
-//             this._config.occasions = [];
-//         }
-//         this._config.occasions[0] = event.detail.value;
-//         const newEvent = new Event("config-changed", {
-//             bubbles: true,
-//             composed: true
-//         });
-//         newEvent.detail = { config: this._config };
-//         this.dispatchEvent(newEvent);
-//     }
+       // this.querySelector("#add-occasion").addEventListener("click", () => this.addOccasion());
+    }
 
-//     addOccasion() {
-//         if (!this._config.occasions) {
-//             this._config.occasions = [];
-//         }
-//         this._config.occasions.push({ name: '', date: '', icon: 'mdi:calendar' });
-//         this.render();
-//     }
+    _valueChanged(event) {
+        if (!this._config.occasions) {
+            this._config.occasions = [];
+        }
+        this._config.occasions[0] = event.detail.value;
+        const newEvent = new Event("config-changed", {
+            bubbles: true,
+            composed: true
+        });
+        newEvent.detail = { config: this._config };
+        this.dispatchEvent(newEvent);
+    }
+
+    addOccasion() {
+        if (!this._config.occasions) {
+            this._config.occasions = [];
+        }
+        this._config.occasions.push({ name: '', date: '', icon: 'mdi:calendar' });
+        this.render();
+    }
     
-// }
+}
 
 
 //customElements.define('occasions-card-editor', OccasionsCardEditor);
