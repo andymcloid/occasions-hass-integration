@@ -4,7 +4,7 @@
 
 Setup entities for occasions like birthdays, aniversarys and holidays. Included is also a lovelace card to show the countdown to these events.
 
-![occasions mov](https://raw.githubusercontent.com/andymcloid/occasions-hass-integration/refs/heads/main/www/logo.png)
+![occasions mov](https://raw.githubusercontent.com/andymcloid/occasions-hass-integration/refs/heads/main/screenshot.png)
 
 For installation instructions, see [this guide](https://github.com/thomasloven/hass-config/wiki/Lovelace-Plugins).
 
