@@ -41,11 +41,13 @@ occasions:
 ## Options
 
 ### Card
-| Name       | Type    | Default        | Description |
-| ---------- | ------- | -------------- | ----------- |
-| type       | string  |                | `custom:occasions-card`
-| title      | string  | `Occasions`    | Title of the card
-| occasions  | list    |                | List of occasions to display
+| Name         | Type    | Default        | Description |
+| ------------ | ------- | -------------- | ----------- |
+| type         | string  |                | `custom:occasions-card`
+| title        | string  | `Occasions`    | Title of the card
+| numberofdays | int     | `365`          | Number of days to display
+| occasions    | list    |                | List of occasions to display
+
 ### Occasion
 | Name       | Type    | Default        | Description |
 | ---------- | ------- | -------------- | ----------- |

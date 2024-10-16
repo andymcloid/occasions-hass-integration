@@ -5,31 +5,30 @@ export class OccasionsCardEditor extends LitElement  {
         super();
         this._hass = null;
         this.config = { occasions: [] };
-        this._editIndex = null; // Track the index of the item being edited
     }
 
     static get properties() {
         return {
           _hass: { type: Object },  // Home Assistant object
-          _editIndex: { type: Number },  // Track the currently edited item
           config: { type: Object },  // Configuration object
           schemaBase: { type: Array },  // Schema
           occasionSchema: { type: Array },  // Schema
         };
       }
-
+      
     get schemaBase() {
         return [
-            { name: 'title', selector: { text: {} } },
+            { name: 'title', label: this._hass.localize('ui.panel.lovelace.editor.card.generic.title'), selector: { text: { } } },
+            { name: 'numberofdays', label: this._hass.localize('ui.panel.lovelace.editor.card.generic.days_to_show'), selector: { number: {} } },
         ];
     }
-    
+   
     get occasionSchema() {
         return [
-            { name: 'name', label: 'xxx', selector: { text: {} } },
-            { name: 'date', label: 'xxx', selector: { date: {} } },
-            { name: 'icon', label: 'xxx', selector: { icon: {} } },
-            { name: 'hide_count', text: 'asd', data: 'asddas', label: 'xxx', selector: { boolean: {} } }
+            { name: 'name', label: this._hass.localize('ui.common.name'), selector: { text: {} } },
+            { name: 'date', label: this._hass.localize('ui.components.selectors.selector.types.date'), selector: { date: {} } },
+            { name: 'icon', label:  this._hass.localize(' ui.panel.lovelace.editor.card.generic.icon'), selector: { icon: {} } },
+            { name: 'hide_count', label: this._hass.localize('ui.common.hide') + ' ' + this._hass.localize('component.counter.entity_component._.name'), selector: { boolean: {} } }
         ];
     }
 
@@ -39,6 +38,9 @@ export class OccasionsCardEditor extends LitElement  {
       }
       mwc-icon-button {
         vertical-align: middle;
+      }
+      mwc-button.warning {
+        --mdc-theme-primary: red; 
       }
     `;
 
@@ -63,24 +65,34 @@ export class OccasionsCardEditor extends LitElement  {
         }
 
         return html`
-            <ha-form .hass=${this._hass} .data=${this.config} .schema=${this.schemaBase} @value-changed=${this._valueChanged}></ha-form>
+            <ha-form .hass=${this._hass} .data=${this.config} .computeLabel=${this._computeLabel} .schema=${this.schemaBase} @value-changed=${this._valueChanged}></ha-form>
             <div></div>
             ${this.config.occasions.map((occasion, index) => html`
             
-            <ha-expansion-panel outlined="true" header="${occasion.name}">
+            <ha-expansion-panel outlined="true" header="${occasion.name}" icon="mdi:bug">
             <div></div>
             <ha-form
                 .hass=${this._hass}
                 .data=${occasion}
+                .computeLabel=${this._computeLabel}
                 .schema=${this.occasionSchema}
                 .key=${index}
                 @value-changed=${e => this._occasionChanged(e, index)}
             ></ha-form>
+
+            <mwc-button class="warning" @click=${() => this._deleteOccasion(index)}>${this._hass.localize('ui.components.todo.item.delete')}</mwc-button>
+            <div></div>
             </ha-expansion-panel>
             `)}
             
-            <mwc-button @click=${this._addOccasion}>Add Occasion</mwc-button>
+            <mwc-button @click=${this._addOccasion}>${this._hass.localize('ui.components.todo.item.add')}</mwc-button>
         `;
+    }
+
+    _computeLabel(event, data) {
+        if(event.label)
+               return event.label;
+        return event.name;
     }
 
     _occasionChanged(event, index) {
@@ -102,10 +114,6 @@ export class OccasionsCardEditor extends LitElement  {
         this.dispatchEvent( new CustomEvent('config-changed', { detail: { config: this.config }, bubbles: true, composed: true, }));
     }
 
-    _editOccasion(index) {
-        this._editIndex = index;
-    }
-
     _addOccasion() {
         this.config.occasions.push({
             name: 'New Event',
@@ -113,6 +121,13 @@ export class OccasionsCardEditor extends LitElement  {
             icon: 'mdi:calendar',
             count: false
         });
+        this._requestUpdate();
     }
 
+    _deleteOccasion(index) {
+        const newOccasions = [...this.config.occasions];
+        newOccasions.splice(index, 1);
+        this.config = { ...this.config, occasions: newOccasions };
+        this._requestUpdate();
+    }
 }
